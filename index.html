@@ -1,1 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#1c2550">
+  <title>あんぜんクエスト ～いかのおすしで身をまもれ～</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
 
+    <!-- ステータスバー -->
+    <header id="topbar" class="topbar hidden">
+      <div class="hero-mini" id="heroMini" aria-hidden="true"></div>
+      <div class="status">
+        <div class="status-line">
+          <span class="lv">Lv <b id="lvText">1</b></span>
+          <span class="rank" id="rankText">みならいぼうけんしゃ</span>
+        </div>
+        <div class="exp">
+          <div class="exp-bar"><div id="expFill"></div></div>
+          <span id="expText">0 / 50</span>
+        </div>
+      </div>
+      <button class="tool-btn" id="btnGuide">いかのおすし</button>
+      <button class="tool-btn icon" id="btnSettings" aria-label="せってい">⚙</button>
+    </header>
+
+    <main>
+      <!-- タイトル -->
+      <section id="screen-title" class="screen active">
+        <div class="title-wrap">
+          <div class="title-scene" id="titleScene" aria-hidden="true"></div>
+          <h1 class="logo">
+            <span class="logo-sub">いかのおすしで身をまもれ</span>
+            <span class="logo-main">あんぜんクエスト</span>
+          </h1>
+          <p class="title-lead">町にひそむ「あやしい人」から、自分と友だちを守る冒険に出よう。</p>
+          <button class="big-btn primary" id="btnStart">ぼうけんをはじめる</button>
+          <button class="big-btn ghost" id="btnTitleGuide">「いかのおすし」をたしかめる</button>
+        </div>
+      </section>
+
+      <!-- 主人公えらび -->
+      <section id="screen-hero" class="screen">
+        <div class="panel">
+          <h2 class="panel-title">主人公をえらぼう</h2>
+          <p class="note-safe">ゲームでも、本当の名前は入れないよ。これも身を守るコツ！</p>
+          <div class="hero-grid" id="heroGrid"></div>
+          <button class="big-btn primary" id="btnHeroOk" disabled>この主人公で出発</button>
+        </div>
+      </section>
+
+      <!-- マップ -->
+      <section id="screen-map" class="screen">
+        <div class="map-head">
+          <h2 class="map-title">クエストをえらぼう</h2>
+          <div class="level-tabs" id="levelTabs" role="tablist"></div>
+          <p class="level-desc" id="levelDesc"></p>
+        </div>
+        <div class="map-body" id="mapBody"></div>
+      </section>
+
+      <!-- クエスト -->
+      <section id="screen-quest" class="screen">
+        <div class="quest-head">
+          <button class="tool-btn" id="btnQuit">マップにもどる</button>
+          <div class="quest-name">
+            <span class="quest-cat" id="questCat"></span>
+            <span id="questTitle"></span>
+          </div>
+          <span class="quest-level" id="questLevel"></span>
+          <div class="hearts" id="hearts" aria-label="あんしんハート"></div>
+        </div>
+
+        <div class="quest-body">
+          <div class="stage">
+            <div class="scene" id="scene"></div>
+            <div class="msg-window">
+              <div class="msg-top">
+                <span class="speaker" id="speaker"></span>
+                <span class="step-info" id="stepInfo"></span>
+                <button class="speak-btn" id="btnSpeak" aria-label="よみあげ">🔊</button>
+              </div>
+              <p class="narr" id="narrText"></p>
+              <p class="msg" id="msgText"></p>
+              <span class="next-mark" id="nextMark">▼</span>
+            </div>
+          </div>
+
+          <div class="command">
+            <p class="command-q" id="commandQ">どうする？</p>
+            <div class="choices" id="choices"></div>
+            <div class="free hidden" id="freeInput">
+              <div class="free-hint" id="freeHint"></div>
+              <textarea id="answerText" rows="3" placeholder="あなたなら、何と言う？どうする？ ことばで書いてみよう"></textarea>
+              <div class="free-actions">
+                <button class="big-btn primary" id="btnSubmit">こたえる</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 結果 -->
+      <section id="screen-result" class="screen">
+        <div class="panel result" id="resultPanel"></div>
+      </section>
+    </main>
+
+    <!-- フィードバック -->
+    <div class="overlay hidden" id="feedback" role="dialog" aria-modal="true">
+      <div class="fb-card" id="fbCard">
+        <div class="fb-mark" id="fbMark"></div>
+        <h2 class="fb-title" id="fbTitle"></h2>
+        <p class="fb-text" id="fbText"></p>
+        <div class="fb-tags" id="fbTags"></div>
+        <div class="fb-model hidden" id="fbModel"></div>
+        <div class="fb-actions" id="fbActions"></div>
+      </div>
+    </div>
+
+    <!-- いかのおすし -->
+    <div class="overlay hidden" id="guide" role="dialog" aria-modal="true">
+      <div class="sheet">
+        <h2 class="sheet-title">身を守る合言葉「いかのおすし」</h2>
+        <div class="ika-list" id="ikaList"></div>
+        <div class="extra-rules">
+          <div class="rule"><b>個人情報は教えない</b><span>名前・住所・学校・電話番号・家族のるす・帰る時間。聞かれても答えなくていい。教えたらアウト！</span></div>
+          <div class="rule"><b>困っている人を見つけたら</b><span>一人で立ち向かわない。近くの大人・お店の人に知らせる。あぶないときは110番。</span></div>
+          <div class="rule"><b>見た目では分からない</b><span>こわそうな人だけがあやしいとは限らない。ふつうの人、やさしそうな人でも「ついて来て」「教えて」はあやしいサイン。</span></div>
+        </div>
+        <button class="big-btn primary" data-close="guide">わかった</button>
+      </div>
+    </div>
+
+    <!-- 設定 -->
+    <div class="overlay hidden" id="settings" role="dialog" aria-modal="true">
+      <div class="sheet">
+        <h2 class="sheet-title">せってい</h2>
+        <label class="setting"><input type="checkbox" id="optSpeech"> セリフを自動でよみあげる</label>
+        <label class="setting"><input type="checkbox" id="optBig"> 文字を大きくする</label>
+        <label class="setting"><input type="checkbox" id="optType"> 文字を1文字ずつ表示する</label>
+        <p class="setting-note">上級の「自分のことばで答える」は、キーワードによる自動判定です。答えの内容は、先生といっしょに確かめましょう。</p>
+        <p class="setting-note">画像の差しかえ：<code>images/</code> フォルダに、人物ごとのファイル名（例：<code>hood.png</code>）で写真を置くと、イラストのかわりに表示されます。一覧は <code>images/README.txt</code> を見てください。</p>
+        <button class="big-btn danger" id="btnReset">記録をすべて消す</button>
+        <button class="big-btn primary" data-close="settings">とじる</button>
+      </div>
+    </div>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
